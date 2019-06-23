@@ -1,22 +1,28 @@
 import folium
 import pandas
 
-#This is how you would set up a map
 
-map = folium.Map(location=[38.58,-99.09], zoom_start=6, tiles="Mapbox Bright")
+data = pandas.read_csv("Volcanoes.txt")
+lat = list(data["LAT"])
+lon = list(data["LON"])
+elev = list(data["ELEV"]) #added elevation to make the popup dyanmic
+name = list(data["NAME"])
 
-#add elements to the map
-#map.add_child(folium.Marker(location=[80,-100], popup="Hi I am marker", icon=folium.Icon(color='green'))) #add children to the map
+html = """
+Volcano name: <br>
+<a href="https://www.google.com/search?q=%%22%s%%22" target="_blank">%s</a><br>
+Height: %s m
+"""
 
-# a different approach is adding a feature group
+#<h4>Volcano information:</h4>
+#Height: %s m
+map = folium.Map(location=[38.58, -99.09], zoom_start=5, title="Mapbox Bright")
 fg = folium.FeatureGroup(name="My Map")
-#add it to the feature object - keeps code organized
-#fg.add_child(folium.Marker(location=[38.58,-99.09], popup="Hi I am marker", icon=folium.Icon(color='green'))) #add
 
-#add a forloop to add multiple markers
-for coordinates in :
-    fg.add_child(folium.Marker(location=coordinates, popup="Hi I am marker", icon=folium.Icon(color='green'))) #add
+#Need to go through each list 
+for lt, ln, el,name in zip(lat, lon, elev, name): #need to use zip because it will combine it as the same time
+    iframe = folium.IFrame(html=html % (name, name, el), width=200, height=100)
+    fg.add_child(folium.Marker(location=[lt, ln], popup=folium.Popup(iframe), icon = folium.Icon(color = "red")))
 
 map.add_child(fg)
-
-map.save("Map2.html")
+map.save("Map3.html")
